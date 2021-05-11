@@ -75,13 +75,41 @@ def add_specialChar(username, inc_sChar):
     Return Value:
         username + special character
     '''
+    if inc_sChar.lower() == 'no':
+        return username
+
     sChars = ['!', '#', '$', '%', '^', '&', '*', '(', '{', '[', '_', '.', ',', '/', '?']
 
     selected = random.choice(sChars)
-    char_len = random.randint(1, 3)
-    
+    num = random.randint(1, 3)
+
     # Each sChar should have a special position to be inserted in.
-    return selected
+    if selected in ['!', '#', '$', '%', '*', '?', '.']:
+        sChar_str = selected * num
+        username = front_back_attach(sChar_str, username)
+
+    return username
+
+# --------------------------------------------------------------------------------------- #
+# ----------------------------- Helper Functions ---------------------------------------- #
+# --------------------------------------------------------------------------------------- #
+def back_attach(char, username):
+    '''
+    Attaches a string of special characters to the end of a username.
+    '''
+    return username + char
+
+def front_attach(char, username):
+    '''
+    Attaches a string of special characters to the front of a username.
+    '''
+    return char + username
+
+def front_back_attach(char, username):
+    '''
+    Attaches a string of special characters to the front and back of a username.
+    '''
+    return char + username + char
 
 if __name__ == '__main__':
     # full_name is a list with each index containing a name.
