@@ -3,6 +3,7 @@ from itertools import combinations
 import random
 
 vowels = ['a', 'e', 'i', 'o', 'u']
+numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 def firstLetter_lastName(names):
     '''
@@ -78,38 +79,50 @@ def add_specialChar(username, inc_sChar):
     if inc_sChar.lower() == 'no':
         return username
 
-    sChars = ['!', '#', '$', '%', '^', '&', '*', '(', '{', '[', '_', '.', ',', '/', '?']
+    all_sChars = ['!', '#', '$', '%', '^', '&', '*', '(', '{', '[', '<', '_', '.', ',', '/', '?']
 
-    selected = random.choice(sChars)
+    selected = random.choice(all_sChars) 
     num = random.randint(1, 3)
 
     # Each sChar should have a special position to be inserted in.
-    if selected in ['!', '#', '$', '%', '*', '?', '.']:
-        sChar_str = selected * num
-        username = front_back_attach(sChar_str, username)
+    signs = ['!', '#', '$', '%', '*', '?', '.']
+    if selected in signs:
+        sChar = selected * num
+        username = front_back_attach(sChar, username)
+    
+    # If an open bracket is selected, a closed bracket must be followed.
+    brackets = ['(', '{', '[', '<', '/']
+    elif selected in brackets:
+        # First separate the number str from normal word str
+        num_str = ""
+        for char in username:
+            if char in numbers:
+                num_str += char
+                # Remove the number from the username
+                username.remove(char)
+        # Then we RANDOMLY splice the word str
+        spl_num = random.randint(0, len(username))
+
+    # Separators split first name & last name.
+    # separators = ['^', '&', '_', ',']
+    # elif selected in separators:
 
     return username
 
 # --------------------------------------------------------------------------------------- #
 # ----------------------------- Helper Functions ---------------------------------------- #
 # --------------------------------------------------------------------------------------- #
-def back_attach(char, username):
+def front_back_attach(sChar, username):
     '''
-    Attaches a string of special characters to the end of a username.
+    Attaches a string of special characters to the front and/or back of a username.
     '''
-    return username + char
+    new_uname = [
+        sChar + username,
+        sChar + username + sChar,
+        username + sChar
+    ]
 
-def front_attach(char, username):
-    '''
-    Attaches a string of special characters to the front of a username.
-    '''
-    return char + username
-
-def front_back_attach(char, username):
-    '''
-    Attaches a string of special characters to the front and back of a username.
-    '''
-    return char + username + char
+    return random.choice(new_uname)
 
 if __name__ == '__main__':
     # full_name is a list with each index containing a name.
