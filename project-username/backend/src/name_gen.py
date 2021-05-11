@@ -62,11 +62,35 @@ def add_number(username, inc_num):
 
     return username + str(num)
 
+def add_specialChar(username, inc_sChar):
+    '''
+    Adds a random special character to the username.
+
+    Arguments:
+        username (string) - A generated username.
+    
+    Exceptions:
+        InputError - username is empty
+    
+    Return Value:
+        username + special character
+    '''
+    sChars = ['!', '#', '$', '%', '^', '&', '*', '(', '{', '[', '_', '.', ',', '/', '?']
+
+    selected = random.choice(sChars)
+    char_len = random.randint(1, 3)
+    
+    # Each sChar should have a special position to be inserted in.
+    return selected
+
 if __name__ == '__main__':
     # full_name is a list with each index containing a name.
     full_name = input('Enter your full name: ').split(" ")
-    username1 = firstLetter_lastName(full_name)
+    username = firstLetter_lastName(full_name)
 
     inc_num = input('Fancy a number? ')
-    username2 = add_number(username1, inc_num)
-    print(username2)
+    username = add_number(username, inc_num)
+
+    inc_sChar = input('Any special characters? ')
+    username = add_specialChar(username, inc_sChar)
+    print(username)
