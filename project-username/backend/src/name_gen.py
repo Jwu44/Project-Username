@@ -1,4 +1,5 @@
 from itertools import combinations
+from os import name
 
 import random
 
@@ -79,7 +80,7 @@ def add_specialChar(username, inc_sChar):
     if inc_sChar.lower() == 'no':
         return username
 
-    all_sChars = ['!', '#', '$', '%', '^', '&', '*', '(', '{', '[', '<', '_', '.', ',', '/', '?']
+    all_sChars = ['(', '{', '[', '<']
 
     selected = random.choice(all_sChars) 
     num = random.randint(1, 3)
@@ -91,21 +92,30 @@ def add_specialChar(username, inc_sChar):
         username = front_back_attach(sChar, username)
     
     # If an open bracket is selected, a closed bracket must be followed.
-    brackets = ['(', '{', '[', '<', '/']
-    elif selected in brackets:
+    brackets = ['(', '{', '[', '<']
+    if selected in brackets:
         # First separate the number str from normal word str
         num_str = ""
         for char in username:
             if char in numbers:
                 num_str += char
-                # Remove the number from the username
-                username.remove(char)
-        # Then we RANDOMLY splice the word str
-        spl_num = random.randint(0, len(username))
+        # Remove the number from the username by slicing it.
+        username = username[:len(num_str) + 1]
 
-    # Separators split first name & last name.
-    # separators = ['^', '&', '_', ',']
-    # elif selected in separators:
+        name_length = len(username)
+        # Select a random range of indexes that will be contained by the brackets.
+        rand_ind = range_select(name_length)
+        brac_start = rand_ind[0]
+        brac_end = rand_ind[1]
+        # Put the whole username together with the number at the end.
+        open = selected
+        closed = correct_bracket(open)
+        
+        username = username[:brac_start] + open + username[brac_start:brac_end] + closed + username[brac_end:name_length] + num_str
+
+    # # Separators split first name & last name.
+    # # separators = ['^', '&', '_', ',']
+    # # elif selected in separators:
 
     return username
 
@@ -123,6 +133,35 @@ def front_back_attach(sChar, username):
     ]
 
     return random.choice(new_uname)
+
+def correct_bracket(open_bracket):
+    '''
+    Given an open bracket, return the correct closed bracket.
+    '''
+    if open_bracket == '(':
+        return ')'
+    if open_bracket == '{':
+        return '}'
+    if open_bracket == '[':
+        return ']'
+    if open_bracket == '<':
+        return '>'
+    else:
+        return ''
+
+def range_select(name_length):
+    '''
+    Given the length of a username, select a random range of indexes.
+    '''
+    rand_range = [random.randint(0, name_length), random.randint(0, name_length)]
+    start = min(rand_range)
+    end = max(rand_range)
+
+    # Redo if start and end indexes are the same.
+    if start == end:
+        return range_select(name_length)
+    else:
+        return start, end
 
 if __name__ == '__main__':
     # full_name is a list with each index containing a name.
