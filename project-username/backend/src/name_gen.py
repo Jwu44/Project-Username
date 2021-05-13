@@ -80,8 +80,9 @@ def add_specialChar(username, inc_sChar):
     if inc_sChar.lower() == 'no':
         return username
 
-    all_sChars = ['(', '{', '[', '<']
+    all_sChars = ['!', '#', '$', '%', '*', '?', '.', '(', '{', '[', '<', '^', '&', '_']
 
+    # Randomly select a special character as well as its number of occurences.
     selected = random.choice(all_sChars) 
     num = random.randint(1, 3)
 
@@ -95,13 +96,7 @@ def add_specialChar(username, inc_sChar):
     brackets = ['(', '{', '[', '<']
     if selected in brackets:
         # First separate the number str from normal word str
-        num_str = ""
-        for char in username:
-            if char in numbers:
-                num_str += char
-        # Remove the number from the username by slicing it.
-        username = username[:len(num_str) + 1]
-
+        username, num_str = rem_num(username)
         name_length = len(username)
         # Select a random range of indexes that will be contained by the brackets.
         rand_ind = range_select(name_length)
@@ -113,9 +108,15 @@ def add_specialChar(username, inc_sChar):
         
         username = username[:brac_start] + open + username[brac_start:brac_end] + closed + username[brac_end:name_length] + num_str
 
-    # # Separators split first name & last name.
-    # # separators = ['^', '&', '_', ',']
-    # # elif selected in separators:
+    # Separators splits the username at a random index.
+    separators = ['^', '&', '_', '.']
+    if selected in separators:
+        # Separate num str from username.
+        username, num_str = rem_num(username)
+        name_length = len(username)
+        # Select a random index for separator to be inserted into.
+        sep_ind = random.randint(0, name_length)
+        username = username[:sep_ind] + selected + username[sep_ind:name_length] + num_str
 
     return username
 
@@ -162,6 +163,21 @@ def range_select(name_length):
         return range_select(name_length)
     else:
         return start, end
+
+def rem_num(username):
+    '''
+    Given a username with numbers appended, remove them. Returns username without num
+    & the num string.
+    '''
+    num_str = ""
+    for char in username:
+        if char in numbers:
+            num_str += char
+    # Remove the number from the username by slicing it.
+    words_only = len(username) - len(num_str)
+    username = username[:words_only]
+    
+    return username, num_str
 
 if __name__ == '__main__':
     # full_name is a list with each index containing a name.
