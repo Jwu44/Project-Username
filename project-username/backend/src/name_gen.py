@@ -45,6 +45,33 @@ def firstLetter_lastName(names):
 
     return username
 
+def firstName_lastName(names):
+    '''
+    Form a username by concatenating a random SEQUENCE using the 
+    given first & last name.
+
+    Arguments:
+        names (list) - List indexed with the user's full name.
+    
+    Exceptions:
+        InputError - names is empty
+    
+    Return Value:
+        Randomly concatenated string
+    '''
+    first_name = names[0].lower()
+    last_name = names[-1].lower()
+
+    first_start, first_end = range_select(len(first_name), True)
+    last_start, last_end = range_select(len(last_name), True)
+
+    new_start = first_name[first_start:first_end]
+    new_last = last_name[last_start:last_end]
+
+    username = new_start + new_last
+    
+    return username
+
 def add_number(username, inc_num):
     '''
     Adds a random number to the username.
@@ -120,7 +147,7 @@ def add_specialChar(username, inc_sChar):
 
     return username
 
-# --------------------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------------------- # 
 # ----------------------------- Helper Functions ---------------------------------------- #
 # --------------------------------------------------------------------------------------- #
 def front_back_attach(sChar, username):
@@ -150,11 +177,17 @@ def correct_bracket(open_bracket):
     else:
         return ''
 
-def range_select(name_length):
+def range_select(name_length, is_fullName=False):
     '''
     Given the length of a username, select a random range of indexes.
     '''
-    rand_range = [random.randint(0, name_length), random.randint(0, name_length)]
+    if is_fullName == True:
+        # If it's a fullname, we want the range to be bigger so the username isn't a 2 letter word.
+        # I.e. we don't want usernames like 'is', 'to', 'ab'
+        # They're just ugly.
+        rand_range = [random.randint(2, name_length), random.randint(2, name_length)]
+    else:
+        rand_range = [random.randint(0, name_length), random.randint(0, name_length)]
     start = min(rand_range)
     end = max(rand_range)
 
@@ -182,7 +215,8 @@ def rem_num(username):
 if __name__ == '__main__':
     # full_name is a list with each index containing a name.
     full_name = input('Enter your full name: ').split(" ")
-    username = firstLetter_lastName(full_name)
+    # username = firstLetter_lastName(full_name)
+    username = firstName_lastName(full_name)
 
     inc_num = input('Fancy a number? ')
     username = add_number(username, inc_num)
