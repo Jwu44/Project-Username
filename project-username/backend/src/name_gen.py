@@ -20,8 +20,15 @@ def firstLetter_lastName(names):
     Return Value:
         A list of possible usernames
     '''
-    first_l = names[0][0].lower()
-    last_name = names[-1].lower()
+
+    try:
+        first_l = names[0][0].lower()
+        last_name = names[-1].lower()
+
+    # No first name entered, only a space followed by a lastname.
+    except IndexError:
+        raise IndexError
+
     if len(last_name) > 2:
         # Take the first 3 letters of the username.
         first_three_surname = last_name[:3]

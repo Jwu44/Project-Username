@@ -28,10 +28,12 @@ def create_users():
         ],
         'special': [
             'FirstNameOnly ',
-            ' LastNameOnly'
+            ' LastNameOnly',
             'fa rt',
             'Rat Man123',
-            'a b'
+            'Hubert Blaine Wolfeschlegelsteinhausenbergerdorff Sr',
+            '',
+            'a b',
             ' '
         ]
     }
@@ -45,7 +47,7 @@ def test_normal_firstL_lastName(create_users):
     '''
     names = create_users['normal']
 
-    name1 = names[0].split(" ")
+    name2 = names[0].split(" ")
     username = firstLetter_lastName(name1)
     assert username == 'keas'
 
@@ -67,5 +69,31 @@ def test_normal_firstL_lastName(create_users):
     '''
     names = create_users['special']
 
+    name1 = names[0].split(" ")
+    username = firstLetter_lastName(name1)
+    assert username == 'f'
+
+    name2 = names[1].split(" ")
+    name6 = names[5].split(" ")
+    name8 = names[7].split(" ")
+    with pytest.raises(IndexError):
+        firstLetter_lastName(name2)
+        firstLetter_lastName(name6)
+        firstLetter_lastName(name8)
 
 
+    name3 = names[2].split(" ")
+    username = firstLetter_lastName(name3)
+    assert username == 'frt'
+
+    name4 = names[3].split(" ")
+    username = firstLetter_lastName(name4)
+    assert username == 'rman'
+
+    name5 = names[4].split(" ")
+    username = firstLetter_lastName(name5)
+    assert username == 'hsr'
+
+    name7 = names[6].split(" ")
+    username = firstLetter_lastName(name7)
+    assert username == 'ab'
